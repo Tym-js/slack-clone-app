@@ -5,9 +5,13 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "firebase": "latest",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-scripts": "2.0.3"
+    "react-router-dom": "latest",
+    "react-scripts": "2.0.3",
+    "semantic-ui-css": "latest",
+    "semantic-ui-react": "latest"
   },
   "devDependencies": {},
   "scripts": {
