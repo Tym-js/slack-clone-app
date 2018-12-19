@@ -1,4 +1,6 @@
 import React from "react"
+import firebase from "../../firebase"
+import md5 from "md5"
 import {
   Grid,
   Segment,
@@ -19,10 +21,23 @@ class Register extends React.Component {
     errors: [],
     isLoading: false
   }
+
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
-  handleSubmit = () => {}
+  handleSubmit = event => {
+    event.preventDefault()
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(createdUser => {
+        console.log(createdUser)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
   render() {
     const { username, email, password, passwordConfirmation } = this.state
     return (
