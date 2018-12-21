@@ -1,11 +1,11 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import "./styles.css"
 import "semantic-ui-css/semantic.min.css"
-import "./components/App.css"
+import App from "./components/App.jsx"
+import Login from "./components/Auth/Login.jsx"
+import Register from "./components/Auth/Register.jsx"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import App from "./components/App"
-import Login from "./components/Auth/Login"
-import Register from "./components/Auth/Register"
 
 const Root = () => (
   <Router>

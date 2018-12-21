@@ -7,8 +7,8 @@ import {
   Form,
   Header,
   Icon,
-  Message,
-  Button
+  Button,
+  Message
 } from "semantic-ui-react"
 import { Link } from "react-router-dom"
 
@@ -19,17 +19,42 @@ class Register extends React.Component {
     password: "",
     passwordConfirmation: "",
     errors: [],
-    isLoading: false
+    loading: false,
+    usersRef: firebase.database().ref("users")
+  }
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+  handleSubmit = event => {
+    event.preventDefault()
+    this.setState({ errors: [], loading: true })
+    if (this.isFormValid()) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(createdUser => {
+          console.log(createdUser)
+          this.setState({ loading: false })
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({
+            errors: this.state.errors.concat(err),
+            leading: false
+          })
+        })
+    }
   }
 
   isFormValid = () => {
-    let errors = []
     let error
+    let errors = []
     if (this.isFormEmpty(this.state)) {
       error = { message: "Fill in all fields" }
       this.setState({ errors: errors.concat(error) })
       return false
-    } else if (!this.isPasswordValid(this.state)) {
+    } else if (this.isPasswordValid(this.state)) {
       error = { message: "Password is invalid" }
       this.setState({ errors: errors.concat(error) })
       return false
@@ -37,7 +62,6 @@ class Register extends React.Component {
       return true
     }
   }
-
   isFormEmpty = ({ username, email, password, passwordConfirmation }) => {
     return (
       !username.length ||
@@ -46,7 +70,6 @@ class Register extends React.Component {
       !passwordConfirmation.length
     )
   }
-
   isPasswordValid = ({ password, passwordConfirmation }) => {
     if (password.length < 6 || passwordConfirmation.length < 6) {
       return false
@@ -60,22 +83,10 @@ class Register extends React.Component {
   displayErrors = errors =>
     errors.map((error, i) => <p key={i}>{error.message}</p>)
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-  handleSubmit = event => {
-    if (this.isFormValid()) {
-      event.preventDefault()
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(createdUser => {
-          console.log(createdUser)
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
+  handleInputError = (errors, inputName) => {
+    return errors.some(error =>
+      error.message.toLowerCase().includes(inputName) ? "error" : ""
+    )
   }
 
   render() {
@@ -84,23 +95,24 @@ class Register extends React.Component {
       email,
       password,
       passwordConfirmation,
-      errors
+      errors,
+      loading
     } = this.state
     return (
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as="h2" icon color="orange" textAlign="center">
-            <Icon name="puzzle piece" color="orange" />
-            Register for DevChat
+          <Header as="h2" icon color="orange">
+            <Icon name="puzzle piece" />
+            Register for Devchat
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input
                 fluid
                 name="username"
+                placeholder="Username"
                 icon="user"
                 iconPosition="left"
-                placeholder="username"
                 onChange={this.handleChange}
                 value={username}
                 type="text"
@@ -108,34 +120,43 @@ class Register extends React.Component {
               <Form.Input
                 fluid
                 name="email"
+                placeholder="Email Address"
                 icon="mail"
                 iconPosition="left"
-                placeholder="Email Address"
                 onChange={this.handleChange}
                 value={email}
+                className={this.handleInputError(errors, "email")}
                 type="email"
               />
               <Form.Input
                 fluid
                 name="password"
+                placeholder="Password"
                 icon="lock"
                 iconPosition="left"
-                placeholder="Password"
                 onChange={this.handleChange}
                 value={password}
+                className={this.handleInputError(errors, "password")}
                 type="password"
               />
               <Form.Input
                 fluid
                 name="passwordConfirmation"
+                placeholder="Password Confirmation"
                 icon="repeat"
                 iconPosition="left"
-                placeholder="Password Confirmation"
                 onChange={this.handleChange}
                 value={passwordConfirmation}
+                className={this.handleInputError(errors, "password")}
                 type="password"
               />
-              <Button fluid color="orange" size="large">
+              <Button
+                disabled={loading}
+                className={loading ? "loading" : ""}
+                fluid
+                color="orange"
+                size="large"
+              >
                 Submit
               </Button>
             </Segment>
@@ -147,7 +168,7 @@ class Register extends React.Component {
             </Message>
           )}
           <Message>
-            Already a user? <Link to="/login">Login</Link>
+            Already a user?<Link to="/login">Login</Link>
           </Message>
         </Grid.Column>
       </Grid>
