@@ -12,12 +12,20 @@ import {
   withRouter
 } from "react-router-dom";
 import firebase from "./firebase";
+import { createStore } from "redux";
+import { Provider, connect } from "react-redux";
+import rootReducer from "./reducers";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { setUser } from "./actions/index";
+
+const store = createStore(rootReducer, composeWithDevTools());
 
 class Root extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.props.history.push("/");
+        this.props.setUser(user);
       }
     });
   }
@@ -33,11 +41,18 @@ class Root extends React.Component {
   }
 }
 
-const RootWithAuth = withRouter(Root);
+const RootWithAuth = withRouter(
+  connect(
+    null,
+    { setUser }
+  )(Root)
+);
 
 ReactDOM.render(
-  <Router>
-    <RootWithAuth />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <RootWithAuth />
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
