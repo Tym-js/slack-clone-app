@@ -1,6 +1,6 @@
-import React from "react"
-import firebase from "../../firebase"
-import md5 from "md5"
+import React from "react";
+import firebase from "../../firebase";
+import md5 from "md5";
 import {
   Grid,
   Segment,
@@ -9,8 +9,8 @@ import {
   Button,
   Message,
   Header
-} from "semantic-ui-react"
-import { Link } from "react-router-dom"
+} from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 class Register extends React.Component {
   state = {
@@ -21,20 +21,20 @@ class Register extends React.Component {
     errors: [],
     loading: false,
     usersRef: firebase.database().ref("users")
-  }
+  };
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
+    this.setState({ [event.target.name]: event.target.value });
+  };
   handleSubmit = event => {
-    event.preventDefault()
+    event.preventDefault();
     if (this.isFormValid()) {
-      this.setState({ errors: [], loading: true })
+      this.setState({ errors: [], loading: true });
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(createdUser => {
-          console.log(createdUser)
+          console.log(createdUser);
           createdUser.user
             .updateProfile({
               displayName: this.state.username,
@@ -44,76 +44,76 @@ class Register extends React.Component {
             })
             .then(() => {
               this.saveUser(createdUser).then(() => {
-                console.log("user saved")
-              })
+                console.log("user saved");
+              });
             })
             .catch(err => {
-              console.log(err)
+              console.log(err);
               this.setState({
                 errors: this.state.errors.concat(err),
                 loading: false
-              })
-            })
+              });
+            });
         })
         .catch(err => {
-          console.log(err)
+          console.log(err);
           this.setState({
             errors: this.state.errors.concat(err),
             loading: false
-          })
-        })
+          });
+        });
     }
-  }
+  };
 
   saveUser = createdUser => {
     return this.state.usersRef.child(createdUser.user.uid).set({
       name: createdUser.user.displayName,
       avatar: createdUser.user.photoURL
-    })
-  }
+    });
+  };
 
   isFormValid = () => {
-    let error
-    let errors = []
+    let error;
+    let errors = [];
 
     if (this.isFormEmpty(this.state)) {
-      error = { message: "Fill in all fields" }
-      this.setState({ errors: errors.concat(error) })
-      return false
+      error = { message: "Fill in all fields" };
+      this.setState({ errors: errors.concat(error) });
+      return false;
     } else if (!this.isPasswordValid(this.state)) {
-      error = { message: "Password is invalid" }
-      this.setState({ errors: errors.concat(error) })
-      return false
+      error = { message: "Password is invalid" };
+      this.setState({ errors: errors.concat(error) });
+      return false;
     } else {
-      return true
+      return true;
     }
-  }
+  };
   isFormEmpty = ({ username, email, password, passwordConfirmation }) => {
     return (
       !username.length ||
       !email.length ||
       !password.length ||
       !passwordConfirmation
-    )
-  }
+    );
+  };
   isPasswordValid = ({ password, passwordConfirmation }) => {
     if (password.length < 6 || passwordConfirmation.length < 6) {
-      return false
+      return false;
     } else if (password !== passwordConfirmation) {
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
-  }
+  };
 
   displayErrors = errors =>
-    errors.map((error, i) => <p key={i}>{error.message}</p>)
+    errors.map((error, i) => <p key={i}>{error.message}</p>);
 
   handleInputError = (errors, inputName) => {
     return errors.some(error => error.message.toLowerCase().includes(inputName))
       ? "error"
-      : ""
-  }
+      : "";
+  };
 
   render() {
     const {
@@ -123,12 +123,12 @@ class Register extends React.Component {
       passwordConfirmation,
       errors,
       loading
-    } = this.state
+    } = this.state;
 
     return (
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as="h2" icon color="orange">
+          <Header as="h1" icon color="orange">
             <Icon name="puzzle piece" />
             Register for DevChat
           </Header>
@@ -199,8 +199,8 @@ class Register extends React.Component {
           </Message>
         </Grid.Column>
       </Grid>
-    )
+    );
   }
 }
 
-export default Register
+export default Register;
