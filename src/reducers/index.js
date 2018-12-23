@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
 import userReducer from "./user";
+import channelReducer from "./channel";
 
 export default combineReducers({
-  user: userReducer
+  user: userReducer,
+  channel: channelReducer
 });
