@@ -37,6 +37,9 @@ class Channels extends React.Component {
           this.setState({ channelName: "", channelDetail: "" });
           this.closeModal();
           console.log("channel added!");
+        })
+        .catch(err => {
+          console.log(err);
         });
     }
   };
@@ -84,8 +87,8 @@ class Channels extends React.Component {
               <Button color="green" inverted onClick={this.handleSubmit}>
                 <Icon name="checkmark" /> Add
               </Button>
-              <Button color="red" inverted>
-                <Icon name="remove" onClick={this.closeModal} /> Cancel
+              <Button color="red" inverted onClick={this.closeModal}>
+                <Icon name="remove" /> Cancel
               </Button>
             </Modal.Actions>
           </Modal>
