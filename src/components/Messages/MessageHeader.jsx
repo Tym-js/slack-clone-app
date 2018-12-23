@@ -1,11 +1,11 @@
-import React from "react";
-import { Segment, Header, Icon, Input } from "semantic-ui-react";
+import React from "react"
+import { Segment, Header, Icon, Input } from "semantic-ui-react"
 
 class MessageHeader extends React.Component {
   render() {
     return (
       <Segment clearing>
-        <Header fluid={true} as="h2" floated="left" style={{ marginBottom: 0 }}>
+        <Header fluid="true" as="h2" floated="left" style={{ marginBottom: 0 }}>
           <span>
             Channel <Icon name="star outline" color="black" />
           </span>
@@ -20,8 +20,8 @@ class MessageHeader extends React.Component {
           />
         </Header>
       </Segment>
-    );
+    )
   }
 }
 
-export default MessageHeader;
+export default MessageHeader
