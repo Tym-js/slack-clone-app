@@ -39,7 +39,9 @@ class MessageForm extends React.Component {
           })
         })
     } else {
-      this.setState({ loading: false })
+      this.setState({
+        errors: this.state.errors.concat({ message: "Add a message" })
+      })
     }
   }
 
@@ -57,11 +59,14 @@ class MessageForm extends React.Component {
   }
 
   render() {
+    const { errors, message, loading } = this.state
+
     return (
       <Segment className="message__form">
         <Input
           fluid
           name="message"
+          value={message}
           style={{ marginBottom: "0.7em" }}
           label={<Button icon={"add"} />}
           labelPosition="left"
@@ -74,6 +79,7 @@ class MessageForm extends React.Component {
             content="Add Reply"
             labelPosition="left"
             icon="edit"
+            disabled={loading}
             onClick={this.handleSubmit}
           />
           <Button
