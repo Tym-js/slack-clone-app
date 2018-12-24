@@ -1,8 +1,8 @@
-import React from "react";
-import firebase from "../../firebase";
-import { Segment, Button, Input } from "semantic-ui-react";
+import React from "react"
+import firebase from "../../firebase"
+import { Segment, Button, Input } from "semantic-ui-react"
 
-import FileModal from "./FileModal.jsx";
+import FileModal from "./FileModal.jsx"
 
 class MessageForm extends React.Component {
   state = {
@@ -13,23 +13,23 @@ class MessageForm extends React.Component {
     loading: false,
     errors: [],
     modal: false
-  };
+  }
 
   openModal = () => {
-    this.setState({ modal: true });
-  };
+    this.setState({ modal: true })
+  }
   closeModal = () => {
-    this.setState({ modal: false });
-  };
+    this.setState({ modal: false })
+  }
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
+    this.setState({ [event.target.name]: event.target.value })
+  }
 
   handleSubmit = event => {
-    event.preventDefault();
-    this.setState({ loading: true });
-    const { message, messagesRef } = this.state;
+    event.preventDefault()
+    this.setState({ loading: true })
+    const { message, messagesRef } = this.state
 
     if (message) {
       messagesRef
@@ -37,22 +37,22 @@ class MessageForm extends React.Component {
         .push()
         .set(this.createMessage())
         .then(() => {
-          this.setState({ loading: false, message: "" });
-          console.log("add message");
+          this.setState({ loading: false, message: "" })
+          console.log("add message")
         })
         .catch(err => {
-          console.error(err);
+          console.error(err)
           this.setState({
             loading: false,
             errors: this.state.errors.concat(err)
-          });
-        });
+          })
+        })
     } else {
       this.setState({
         errors: this.state.errors.concat({ message: "Add a message" })
-      });
+      })
     }
-  };
+  }
 
   createMessage = () => {
     const newMessage = {
@@ -63,12 +63,16 @@ class MessageForm extends React.Component {
         name: this.props.currentUser.displayName,
         avatar: this.props.currentUser.photoURL
       }
-    };
-    return newMessage;
-  };
+    }
+    return newMessage
+  }
+
+  uploadFile = (file, metadata) => {
+    console.log(file, metadata)
+  }
 
   render() {
-    const { errors, message, loading, modal } = this.state;
+    const { errors, message, loading, modal } = this.state
 
     return (
       <Segment className="message__form">
@@ -98,11 +102,15 @@ class MessageForm extends React.Component {
             icon="cloud upload"
             onClick={this.openModal}
           />
-          <FileModal modal={modal} closeModal={this.closeModal} />
+          <FileModal
+            modal={modal}
+            closeModal={this.closeModal}
+            uploadFile={this.uploadFile}
+          />
         </Button.Group>
       </Segment>
-    );
+    )
   }
 }
 
-export default MessageForm;
+export default MessageForm
