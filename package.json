@@ -17,7 +17,8 @@
     "redux": "latest",
     "redux-devtools-extension": "2.13.7",
     "semantic-ui-css": "latest",
-    "semantic-ui-react": "latest"
+    "semantic-ui-react": "latest",
+    "uuidv4": "latest"
   },
   "devDependencies": {},
   "scripts": {
